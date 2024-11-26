@@ -1,0 +1,469 @@
+name: Autograding Tests
+'on':
+- push
+permissions:
+  checks: write
+  actions: read
+  contents: read
+jobs:
+  run-autograding-tests:
+    runs-on: ubuntu-latest
+    if: github.actor != 'github-classroom[bot]'
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: Setup Java 21
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: '21'
+        cache: 'maven'
+    - name: Resolve Project Maven Dependencies
+      run: test -f pom.xml && mvn dependency:go-offline dependency:resolve-plugins || true
+        
+    - name: "Rubric: African Swallow Can Carry Coconut"
+      id: testswallowcarrycoconut
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: "Rubric: AfricanSwallow.carryCoconut returns coconut"
+        command: mvn -Dtest=AfricanSwallowTest#carryCoconut_happyPath_shouldReturnCoconut test
+        timeout: 10
+        max-score: 2
+
+    - name: "Rubric: African Swallow fly"
+      id: testswallowfly
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: "Rubric: AfricanSwallow.fly returns fly"
+        command: mvn -Dtest=AfricanSwallowTest#fly_happyPath_shouldContainFly test
+        timeout: 10
+        max-score: 1
+
+    - name: "Rubric: African Swallow Has Carry Coconut"
+      id: swallowhascarrycoconut
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: "Rubric: AfricanSwallow has carryCoconut method"
+        command: mvn -Dtest=AfricanSwallowTest#swallow_class_shouldHaveCarryCoconutMethod test
+        timeout: 10
+        max-score: 2
+
+    - name: "Rubric: African Swallow Has fly"
+      id: testswallowhasfly
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: "Rubric: AfricanSwallow contains fly method"
+        command: mvn -Dtest=AfricanSwallowTest#swallow_class_shouldHaveFlyMethod test
+        timeout: 10
+        max-score: 2
+
+    - name: "Rubric: African Swallow Does Not Have Lay Egg"
+      id: swallownolayegg
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: "Rubric: AfricanSwallow class does not have the layEgg method defined or overridden"
+        command: mvn -Dtest=AfricanSwallowTest#swallow_class_shouldNotHaveLayEggMethod test
+        timeout: 10
+        max-score: 1
+
+    - name: "Rubric: Bird Habitat Bird Report Returns Bird Info"
+      id: birdhabrptbirdinfo
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: "Rubric: BirdHabitat.birdReport returns bird info for all habitat birds"
+        command: mvn -Dtest=BirdHabitatTest#birdReport_happyPath_shouldReturnBirdInfo test
+        timeout: 10
+        max-score: 2
+
+    - name: "Rubric: Bird Habitat Bird Activities Report Returns Bird Activity Info"
+      id: birdHabActRptBirdActInfo
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: "Rubric: BirdHabitat.birdActivitiesReport returns bird activity info for all habitat birds"
+        command: mvn -Dtest=BirdHabitatTest#birdActivitiesReport_happyPath_shouldReturnBirdActivities test
+        timeout: 10
+        max-score: 2
+
+    - name: "Rubric: Bird Habitat Have Birds Lay Eggs Returns Bird Info with Egg"
+      id: birdHabLayEggRetInfo
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: "Rubric: BirdHabitat.haveBirdsLayEggs returns info for all habitat birds and eggs"
+        command: mvn -Dtest=BirdHabitatTest#haveBirdsLayEggs_happyPath_shouldReturnEggLayingInfo test
+        timeout: 10
+        max-score: 2
+
+    - name: "Rubric: Bird Lay Egg"
+      id: birdLayEgg
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: "Rubric: Bird.layEgg shold return egg"
+        command: mvn -Dtest=BirdTest#layEgg_happyPath_shouldContainEgg test
+        timeout: 10
+        max-score: 1
+
+    - name: "Rubric: Bird Class Does Not Have Fly"
+      id: birdNoFly
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: "Rubric: The Bird class should not have the fly method"
+        command: mvn -Dtest=BirdTest#bird_class_shouldNotHaveFlyMethod test
+        timeout: 10
+        max-score: 2
+
+    - name: "Rubric: Bird Does Not Have Swim"
+      id: birdNoSwim
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: "Rubric: The Bird class should not have the Swim method"
+        command: mvn -Dtest=BirdTest#bird_class_shouldNotHaveSwimMethod test
+        timeout: 10
+        max-score: 2
+
+    - name: "Rubric: Bird Does Not Have Carry Coconuts"
+      id: birdNoCoconuts
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: "Rubric: The Bird class should not have the carryCoconuts method"
+        command: mvn -Dtest=BirdTest#bird_class_shouldNotHaveCarryCoconutMethod test
+        timeout: 10
+        max-score: 2
+
+    - name: "Rubric: Penguin Swim Returns Swim"
+      id: penguinSwim
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: "Rubric: The Penguin.swim method should return swim"
+        command: mvn -Dtest=PenguinTest#swim_happyPath_shouldContainSwim test
+        timeout: 10
+        max-score: 1
+
+    - name: "Rubric: Penguin Does Not Have Lay Egg"
+      id: penguinNoLayEgg
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: "Rubric: The Penguin class should not have a layEgg method or override"
+        command: mvn -Dtest=PenguinTest#penguin_class_shouldNotHaveLayEggMethod test
+        timeout: 10
+        max-score: 1
+
+    - name: "Rubric: Penguin Does Not Have Fly"
+      id: penguinNoFly
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: "Rubric: The Penguin class should not have a fly method or override"
+        command: mvn -Dtest=PenguinTest#penguin_class_shouldNotHaveFlyMethod test
+        timeout: 10
+        max-score: 1
+
+    - name: "Rubric: Penguin Does Have Swim Method"
+      id: penguinHasSwim
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: "Rubric: The Penguin class should have a swim method"
+        command: mvn -Dtest=PenguinTest#penguin_class_shouldHaveSwimMethod test
+        timeout: 10
+        max-score: 2
+
+    - name: "Rubric: Assignment - Submit Assignment Correctly Returns A"
+      id: asgnmntSubmitA
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: "Rubric: Assignment.submitAssignment method should return an A grade when the assignment text is correct according to the rubric."
+        command: mvn -Dtest=AssignmentTest#submitAssignment_happyPath_shouldReturnGradeA test
+        timeout: 10
+        max-score: 4
+
+    - name: "Rubric: Assignment - Submit Assignment Incorrectly Returns F"
+      id: asgnmntSubmitF
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: "Rubric: Assignment.submitAssignment method should return an F grade when the assignment text is incorrect according to the rubric."
+        command: mvn -Dtest=AssignmentTest#submitAssignment_badAssignmentText_shouldReturnGradeF test
+        timeout: 10
+        max-score: 4
+
+    - name: "Rubric: Ensure Student Class submitAssignment returns Name/Cours/Grade"
+      id: testsubmitassignmenthappy
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: "Rubric: Student.submitAssignment returns Name/Course/Grade"
+        command: mvn -Dtest=StudentTest#submitAssignment_happyPath_shouldReturnNameCourseAssignmentGrade test
+        timeout: 10
+        max-score: 4
+
+    - name: "Rubric: Student - Submit Assignment With Wrong Course Returns Not Configured"
+      id: submitBadCourse
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: "Rubric: Student.submitAssignment method should return a string indicating the course is not configured when an incorrect course is used."
+        command: mvn -Dtest=StudentTest#submitAssignment_badCourse_shouldReturnCourseNotConfig test
+        timeout: 10
+        max-score: 4
+
+    - name: "Rubric: Circle Area Method Returns Area"
+      id: circleArea
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: "Rubric: The Circle.area method should return the correct area"
+        command: mvn -Dtest=CircleTest#area_happyPath_shouldReturnArea test
+        timeout: 10
+        max-score: 4
+
+    - name: "Rubric: Shape Area Method is Abstract"
+      id: shapeAreaAbstract
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: "Rubric: The Shape.area method must be abstract"
+        command: mvn -Dtest=ShapeTest#ShapeClass_area_shouldBeAbstract test
+        timeout: 10
+        max-score: 4
+
+    - name: "Rubric: Rectangle Area Method Returns Area"
+      id: rectangleArea
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: "Rubric: The Rectangle.area method should return the correct area"
+        command: mvn -Dtest=RectangleTest#area_happyPath_shouldReturnArea test
+        timeout: 10
+        max-score: 4
+
+    - name: "Rubric: Total Area Calculator Calculate Total Area Returns Areas"
+      id: totAreaCalcAreas
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: "Rubric: The TotalAreaCalculator.calculateTotalArea returns areas of all shapes and the total area"
+        command: mvn -Dtest=TotalAreaCalculatorTest#calculateTotalArea_happyPath_shouldReturnAreas test
+        timeout: 10
+        max-score: 4
+
+    - name: "Rubric: Total Area Calculator Calculate Total Area Returns Shape Names"
+      id: totAreaCalcNames
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: "Rubric: The TotalAreaCalculator.calculateTotalArea returns names of all shapes"
+        command: mvn -Dtest=TotalAreaCalculatorTest#calculateTotalArea_happyPath_shouldReturnNames test
+        timeout: 10
+        max-score: 4
+
+    - name: "Rubric: Basic Printer Print Document Returns Print Info"
+      id: basPrntInfo
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: "Rubric: The BasicPrinter.printDocument method returns print information"
+        command: mvn -Dtest=BasicPrinterTest#printDocument_HappyPath_shouldContainPrintInfo test
+        timeout: 10
+        max-score: 3
+
+    - name: "Rubric: Basic Printer Class Does Not Have Fax Document Method"
+      id: basNoFaxDoc
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: "Rubric: The BasicPrinter class does not have a faxDocument method or override"
+        command: mvn -Dtest=BasicPrinterTest#basicPrinter_class_shouldNotHave_faxDocument_method test
+        timeout: 10
+        max-score: 3
+
+    - name: "Rubric: Basic Printer Class Does Not Have Scan Document Method"
+      id: basNoScanDoc
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: "Rubric: The BasicPrinter class does not have a scanDocument method or override"
+        command: mvn -Dtest=BasicPrinterTest#basicPrinter_class_shouldNotHave_scanDocument_method test
+        timeout: 10
+        max-score: 3
+
+    - name: "Rubric: Multi Function Printer Print Document Returns Print Info"
+      id: multiPrntInfo
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: "Rubric: The MultiFunctionPrinter.printDocument method returns print information"
+        command: mvn -Dtest=MultiFunctionPrinterTest#printDocument_HappyPath_shouldContainPrintInfo test
+        timeout: 10
+        max-score: 3
+
+    - name: "Rubric: Multi Function Printer Fax Document Returns Fax Info"
+      id: mulitFaxInfo
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: "Rubric: The MultiFunctionPrinter.faxDocument method returns fax information"
+        command: mvn -Dtest=MultiFunctionPrinterTest#faxDocument_HappyPath_shouldContainFaxInfo test
+        timeout: 10
+        max-score: 3
+
+    - name: "Rubric: Multi Function Printer Scan Document Returns Scan Info"
+      id: multiScanInfo
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: "Rubric: The MultiFunctionPrinter.scanDocument method returns scan information"
+        command: mvn -Dtest=MultiFunctionPrinterTest#scanDocument_HappyPath_shouldContainScanInfo test
+        timeout: 10
+        max-score: 3
+
+    - name: "Rubric: Email Service Send Message Should Return Message and Email"
+      id: emailSendMessage
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: "Rubric: The EmailService.sendMessage method should return the message and Email."
+        command: mvn -Dtest=EmailServiceTest#sendMesssage_happyPath_shouldReturnMessageEmail test
+        timeout: 10
+        max-score: 2
+
+    - name: "Rubric: Email Service Send Message Null Email Should Return Email Config Message"
+      id: emailSendNull
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: "Rubric: The EmailService.sendMessage method should return a message that the email is not configured when the email address is null."
+        command: mvn -Dtest=EmailServiceTest#sendMesssage_emailAddressIsNull_shouldReturnErrorMessage test
+        timeout: 10
+        max-score: 2
+
+    - name: "Rubric: Message Processor Process Message Returns Message and Email Details"
+      id: msgProcMsgEmail
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: "Rubric: The MessageProcessor.processMessage method returns the message sent and the email details"
+        command: mvn -Dtest=MessageProcessorTest#processMessage_emailMessageService_shouldReturnMessageWithEmailDetails test
+        timeout: 10
+        max-score: 3
+
+    - name: "Rubric: Message Processor Process Message Returns Message and SMS Details"
+      id: msgProcMsgSms
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: "Rubric: The MessageProcessor.processMessage method returns the message sent and the SMS details"
+        command: mvn -Dtest=MessageProcessorTest#processMessage_smsMessageService_shouldReturnMessageWithSmsDetails test
+        timeout: 10
+        max-score: 3
+
+    - name: "Rubric: Message Processor Process Message Returns Not Configured Message When Email is Null"
+      id: msgProcMsgEmailNull
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: "Rubric: The MessageProcessor.processMessage method returns not configured message when the email address is null"
+        command: mvn -Dtest=MessageProcessorTest#processMessage_nullEmail_shouldReturnEmailNotConfigured test
+        timeout: 10
+        max-score: 3
+
+    - name: "Rubric: Message Processor Process Message Returns Not Configured Message When Mobile Number is Null"
+      id: msgProcMsgMobileNull
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: "Rubric: The MessageProcessor.processMessage method returns not configured message when the mobile number is null"
+        command: mvn -Dtest=MessageProcessorTest#processMessage_nullMobileNumber_shouldReturnSmsNotConfigured test
+        timeout: 10
+        max-score: 3
+
+    - name: "Rubric: SMS Service Send Message Should Return Message and Mobile Number"
+      id: smsSendMessage
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: "Rubric: The SmsService.sendMessage method should return the message and mobile number."
+        command: mvn -Dtest=SmsMessageServiceTest#sendMesssage_happyPath_shouldReturnMessageSms test
+        timeout: 10
+        max-score: 2
+
+    - name: "Rubric: SMS Service Send Message Null Mobile Number Should Return Mobile Number Config Message"
+      id: smsSendNull
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: "Rubric: The SmsService.sendMessage method should return a message that the mobile number is not configured when the mobileNumber is null"
+        command: mvn -Dtest=SmsMessageServiceTest#sendMesssage_mobilePhoneIsNull_shouldReturnErrorMessage test
+        timeout: 10
+        max-score: 2
+
+    - name: "Rubric: Check coding standard"
+      id: checkstyle
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: "Rubric: Check coding standard"
+        command: mvn checkstyle:check
+        timeout: 10
+        max-score: 2
+
+    - name: Autograding Reporter
+      uses: classroom-resources/autograding-grading-reporter@v1
+      env:
+        TESTSWALLOWCARRYCOCONUT_RESULTS: "${{steps.testswallowcarrycoconut.outputs.result}}"
+        TESTSWALLOWFLY_RESULTS: "${{steps.testswallowfly.outputs.result}}"
+        SWALLOWHASCARRYCOCONUT_RESULTS: "${{steps.swallowhascarrycoconut.outputs.result}}"
+        TESTSWALLOWHASFLY_RESULTS: "${{steps.testswallowhasfly.outputs.result}}"
+        SWALLOWNOLAYEGG_RESULTS: "${{steps.swallownolayegg.outputs.result}}"
+        BIRDHABRPTBIRDINFO_RESULTS: "${{steps.birdhabrptbirdinfo.outputs.result}}"
+        BIRDHABACTRPTBIRDACTINFO_RESULTS: "${{steps.birdHabActRptBirdActInfo.outputs.result}}"
+        BIRDHABLAYEGGRETINFO_RESULTS: "${{steps.birdHabLayEggRetInfo.outputs.result}}"
+        BIRDLAYEGG_RESULTS: "${{steps.birdLayEgg.outputs.result}}"
+        BIRDNOFLY_RESULTS: "${{steps.birdNoFly.outputs.result}}"
+        BIRDNOSWIM_RESULTS: "${{steps.birdNoSwim.outputs.result}}"
+        BIRDNOCOCONUTS_RESULTS: "${{steps.birdNoCoconuts.outputs.result}}"
+        PENGUINSWIM_RESULTS: "${{steps.penguinSwim.outputs.result}}"
+        PENGUINNOLAYEGG_RESULTS: "${{steps.penguinNoLayEgg.outputs.result}}"
+        PENGUINNOFLY_RESULTS: "${{steps.penguinNoFly.outputs.result}}"
+        PENGUINHASSWIM_RESULTS: "${{steps.penguinHasSwim.outputs.result}}"
+        ASGNMNTSUBMITA_RESULTS: "${{steps.asgnmntSubmitA.outputs.result}}"
+        ASGNMNTSUBMITF_RESULTS: "${{steps.asgnmntSubmitF.outputs.result}}"
+        TESTSUBMITASSIGNMENTHAPPY_RESULTS: "${{steps.testsubmitassignmenthappy.outputs.result}}"
+        SUBMITBADCOURSE_RESULTS: "${{steps.submitBadCourse.outputs.result}}"
+        CIRCLEAREA_RESULTS: "${{steps.circleArea.outputs.result}}"
+        SHAPEAREAABSTRACT_RESULTS: "${{steps.shapeAreaAbstract.outputs.result}}"
+        RECTANGLEAREA_RESULTS: "${{steps.rectangleArea.outputs.result}}"
+        TOTAREACALCAREAS_RESULTS: "${{steps.totAreaCalcAreas.outputs.result}}"
+        TOTAREACALCNAMES_RESULTS: "${{steps.totAreaCalcNames.outputs.result}}"
+        BASPRNTINFO_RESULTS: "${{steps.basPrntInfo.outputs.result}}"
+        BASNOFAXDOC_RESULTS: "${{steps.basNoFaxDoc.outputs.result}}"
+        BASNOSCANDOC_RESULTS: "${{steps.basNoScanDoc.outputs.result}}"
+        MULTIPRNTINFO_RESULTS: "${{steps.multiPrntInfo.outputs.result}}"
+        MULITFAXINFO_RESULTS: "${{steps.mulitFaxInfo.outputs.result}}"
+        MULTISCANINFO_RESULTS: "${{steps.multiScanInfo.outputs.result}}"
+        EMAILSENDMESSAGE_RESULTS: "${{steps.emailSendMessage.outputs.result}}"
+        EMAILSENDNULL_RESULTS: "${{steps.emailSendNull.outputs.result}}"
+        MSGPROCMSGEMAIL_RESULTS: "${{steps.msgProcMsgEmail.outputs.result}}"
+        MSGPROCMSGSMS_RESULTS: "${{steps.msgProcMsgSms.outputs.result}}"
+        MSGPROCMSGEMAILNULL_RESULTS: "${{steps.msgProcMsgEmailNull.outputs.result}}"
+        MSGPROCMSGMOBILENULL_RESULTS: "${{steps.msgProcMsgMobileNull.outputs.result}}"
+        SMSSENDMESSAGE_RESULTS: "${{steps.smsSendMessage.outputs.result}}"
+        SMSSENDNULL_RESULTS: "${{steps.smsSendNull.outputs.result}}"
+        CHECKSTYLE_RESULTS: "${{steps.checkstyle.outputs.result}}"
+      with:
+        runners: >-
+          testswallowcarrycoconut,
+          testswallowfly,
+          swallowhascarrycoconut,
+          testswallowhasfly,
+          swallownolayegg,
+          birdhabrptbirdinfo,
+          birdHabActRptBirdActInfo,
+          birdHabLayEggRetInfo,
+          birdLayEgg,
+          birdNoFly,
+          birdNoSwim,
+          birdNoCoconuts,
+          penguinSwim,
+          penguinNoLayEgg,
+          penguinNoFly,
+          penguinHasSwim,
+          asgnmntSubmitA,
+          asgnmntSubmitF,
+          testsubmitassignmenthappy,
+          submitBadCourse,
+          circleArea,
+          shapeAreaAbstract,
+          rectangleArea,
+          totAreaCalcAreas,
+          totAreaCalcNames,
+          basPrntInfo,
+          basNoFaxDoc,
+          basNoScanDoc,
+          multiPrntInfo,
+          mulitFaxInfo,
+          multiScanInfo,
+          emailSendMessage,
+          emailSendNull,
+          msgProcMsgEmail,
+          msgProcMsgSms,
+          msgProcMsgEmailNull,
+          msgProcMsgMobileNull,
+          smsSendMessage,
+          smsSendNull,
+          checkstyle
+
